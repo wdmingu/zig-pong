@@ -9,7 +9,7 @@ pub fn main() !void {
     const windows_width = 600;
     const windows_height = 400;
     const bgcolor = ray.BLACK;
-    var barObject: objects.Bar = .{ .physics = objects.Physics{ .x = 50, .y = 50, .dx = 0, .dy = 0, .width = 5, .height = 50, .windowHeight = windows_height, .windowWidth = windows_width } };
+    var obj: objects.Object = .{ .bar = .{ .physics = objects.Physics{ .x = 50, .y = 50, .dx = 0, .dy = 0, .width = 5, .height = 50, .windowHeight = windows_height, .windowWidth = windows_width } } };
 
     ray.InitWindow(windows_width, windows_height, title);
     defer ray.CloseWindow();
@@ -22,8 +22,8 @@ pub fn main() !void {
         ray.ClearBackground(bgcolor);
 
         const dt = 0.08;
-        barObject.handleInput();
-        barObject.updatePhysics(dt);
-        barObject.updateGraphics(ray);
+        obj.handleInput();
+        obj.updatePhysics(dt);
+        obj.render(ray);
     }
 }
