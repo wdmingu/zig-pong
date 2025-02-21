@@ -1,15 +1,15 @@
-const std = @import("std");
 const ray = @cImport({
     @cInclude("raylib.h");
 });
+const objects = @import("objects.zig");
 
-const title = "Triangle!";
+const title = "Zig Pong!";
 
 pub fn main() !void {
     const windows_width = 600;
     const windows_height = 400;
-    const color = ray.ORANGE;
     const bgcolor = ray.BLACK;
+    var barObject: objects.Bar = .{ .physics = objects.Physics{ .x = 50, .y = 50, .dx = 0, .dy = 0, .width = 5, .height = 50, .windowHeight = windows_height, .windowWidth = windows_width } };
 
     ray.InitWindow(windows_width, windows_height, title);
     defer ray.CloseWindow();
@@ -19,12 +19,11 @@ pub fn main() !void {
     while (!ray.WindowShouldClose()) {
         ray.BeginDrawing();
         defer ray.EndDrawing();
-
         ray.ClearBackground(bgcolor);
 
-        const a = ray.Vector2{ .x = 50.0, .y = 200.0 };
-        const b = ray.Vector2{ .x = 200.0, .y = 50.0 };
-        const c = ray.Vector2{ .x = 50.0, .y = 50.0 };
-        ray.DrawTriangle(a, b, c, color);
+        const dt = 0.08;
+        barObject.handleInput();
+        barObject.updatePhysics(dt);
+        barObject.updateGraphics(ray);
     }
 }
