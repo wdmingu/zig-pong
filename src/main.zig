@@ -14,6 +14,7 @@ pub fn main() !void {
     const windows_height = 400;
     const bgcolor = ray.BLACK;
     var pongWorld = try world.World.init(allocator, windows_height, windows_width);
+    defer pongWorld.deinit();
 
     ray.InitWindow(windows_width, windows_height, title);
     defer ray.CloseWindow();

@@ -10,7 +10,6 @@ pub const World = struct {
     gameObjects: std.ArrayList(object.GameObject),
 
     pub fn init(allocator: std.mem.Allocator, windowHeight: f32, windowWidth: f32 ) !World {
-        var gameObjects = std.ArrayList(object.GameObject).init(allocator);
         const paddle1: object.GameObject = .{.state = state.State{.x = 50, 
                                                                  .y = 50, 
                                                                  .dx = 0, 
@@ -35,6 +34,7 @@ pub const World = struct {
                                           .doUpdateState = state.updatePaddleState,
                                           .doRender      = _render_.renderPaddle,
                                          };
+        var gameObjects = std.ArrayList(object.GameObject).init(allocator);
         try gameObjects.append(paddle1);
         try gameObjects.append(paddle2);
         return World{.windowHeight = windowHeight, .windowWidth = windowWidth, .gameObjects = gameObjects};
@@ -59,6 +59,10 @@ pub const World = struct {
         for (self.gameObjects.items[0..self.gameObjects.items.len]) |*gameObject| {
             gameObject.render();
         }
+    }
+
+    pub fn deinit(self: *World) void {
+        self.gameObjects.deinit();
     }
 
 };
