@@ -23,6 +23,7 @@ pub const World = struct {
                                              .doUpdateState = state.updatePaddleState,
                                              .doRender      = _render_.renderPaddle,
                                              .doResolveCollision = state.resolvePaddleCollision,
+                                             .doResetState = state.resetPaddleState,
                                              .score = 0,
                                              .name = "Player 1",
                                              .objectType = object.ObjectType.Paddle,
@@ -39,6 +40,7 @@ pub const World = struct {
                                              .doUpdateState = state.updatePaddleState,
                                              .doRender      = _render_.renderPaddle,
                                              .doResolveCollision = state.resolvePaddleCollision,
+                                             .doResetState = state.resetPaddleState,
                                              .score = 0,
                                              .name = "Player 2",
                                              .objectType = object.ObjectType.Paddle,
@@ -91,7 +93,15 @@ pub const World = struct {
             if (gameObject.score == self.maxScore) {
                 std.debug.print("{s} wins.", .{gameObject.name});
                 self.resetScores();
+                self.resetState();
+                return;
             }
+        }
+    }
+
+    fn resetState(self: *World) void {
+        for (self.gameObjects.items[0..self.gameObjects.items.len]) |*gameObject| {
+            gameObject.resetState();
         }
     }
 

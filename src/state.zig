@@ -37,3 +37,13 @@ pub fn resolveBallCollision(self: *object.GameObject, other: *object.GameObject)
     _ = self;
     _ = other;
 }
+
+pub fn resetPaddleState(self: *object.GameObject) void {
+    // Not implemented
+    _ = self;
+}
+
+pub fn resetBallState(self: *object.GameObject) void {
+    // Not implemented
+    _ = self;
+}

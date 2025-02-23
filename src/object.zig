@@ -9,6 +9,7 @@ pub const GameObject = struct {
     doUpdateState:      *const fn (*GameObject, f32) void,
     doRender:           *const fn (*GameObject) void,
     doResolveCollision: *const fn (*GameObject, *GameObject) void,
+    doResetState: *const fn (*GameObject) void,
 
     score: u8,
     name: []const u8,
@@ -25,5 +26,9 @@ pub const GameObject = struct {
     }
     pub fn resolveCollision(self: *GameObject, other: *GameObject) void {
         self.doResolveCollision(self, other);
+    }
+
+    pub fn resetState(self: *GameObject) void {
+        self.doResetState(self);
     }
 };
