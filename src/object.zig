@@ -5,6 +5,8 @@ pub const GameObject = struct {
     doHandleInput: *const fn (*GameObject) void,
     doUpdateState: *const fn (*GameObject, f32) void,
     doRender:      *const fn (*GameObject) void,
+    score: u8,
+    name: []const u8,
 
     pub fn handleInput(self: *GameObject) void {
         self.doHandleInput(self);

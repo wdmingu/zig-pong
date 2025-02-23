@@ -12,8 +12,9 @@ const title = "Zig Pong!";
 pub fn main() !void {
     const windows_width = 600;
     const windows_height = 400;
+    const maxScore = 5;
     const bgcolor = ray.BLACK;
-    var pongWorld = try world.World.init(allocator, windows_height, windows_width);
+    var pongWorld = try world.World.init(allocator, windows_height, windows_width, maxScore);
     defer pongWorld.deinit();
 
     ray.InitWindow(windows_width, windows_height, title);
@@ -30,5 +31,6 @@ pub fn main() !void {
         pongWorld.handleInput();
         pongWorld.updateState(dt);
         pongWorld.render();
+        pongWorld.handleGameOver();
     }
 }
