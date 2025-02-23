@@ -9,6 +9,7 @@ pub const World = struct {
     windowWidth: f32,
     gameObjects: std.ArrayList(object.GameObject),
     maxScore: u8,
+    paused: bool,
 
     pub fn init(allocator: std.mem.Allocator, windowHeight: f32, windowWidth: f32, maxScore: u8) !World {
         const paddle1: object.GameObject = .{.state = state.State{.x = 50, 
@@ -55,6 +56,7 @@ pub const World = struct {
     }
 
     pub fn handleInput(self: *World) void {
+        if (self.paused) return;
         // TODO: Make async
         for (self.gameObjects.items[0..self.gameObjects.items.len]) |*gameObject| {
             gameObject.handleInput();
@@ -62,6 +64,7 @@ pub const World = struct {
     }
 
     pub fn updateState(self: *World, dt: f32) void {
+        if (self.paused) return;
         // This cannot be asynchronous if the game is to be deterministic.
         for (self.gameObjects.items[0..self.gameObjects.items.len]) |*gameObject| {
             gameObject.updateState(dt);
@@ -69,6 +72,7 @@ pub const World = struct {
     }
 
     pub fn resolveCollision(self: *World) void {
+        if (self.paused) return;
         // This cannot be asynchronous if the game is to be deterministic.
         const num_objects: usize = self.gameObjects.items.len;
         if (num_objects == 0) return;
@@ -82,6 +86,7 @@ pub const World = struct {
     }
 
     pub fn render(self: *World) void {
+        if (self.paused) return;
         // TODO: Make async
         for (self.gameObjects.items[0..self.gameObjects.items.len]) |*gameObject| {
             gameObject.render();
@@ -89,6 +94,8 @@ pub const World = struct {
     }
 
     pub fn handleGameOver(self: *World) void {
+        if (self.paused) return;
+
         for (self.gameObjects.items[0..self.gameObjects.items.len]) |gameObject| {
             if (gameObject.score == self.maxScore) {
                 std.debug.print("{s} wins.", .{gameObject.name});
@@ -116,4 +123,11 @@ pub const World = struct {
         self.gameObjects.deinit();
     }
 
+    pub fn pause(self: *World) void {
+        self.paused = true;
+    }
+
+    pub fn unpause(self: *World) void {
+        self.paused = false;
+    }
 };
