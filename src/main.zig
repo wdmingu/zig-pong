@@ -30,6 +30,7 @@ pub fn main() !void {
         const dt = 0.08;
         pongWorld.handleInput();
         pongWorld.updateState(dt);
+        pongWorld.resolveCollision();
         pongWorld.render();
         pongWorld.handleGameOver();
     }

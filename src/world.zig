@@ -22,9 +22,11 @@ pub const World = struct {
                                              .doHandleInput = input.demoController,
                                              .doUpdateState = state.updatePaddleState,
                                              .doRender      = _render_.renderPaddle,
+                                             .doResolveCollision = state.resolvePaddleCollision,
                                              .score = 0,
-                                             .name = "paddle1",
-                                           };
+                                             .name = "Player 1",
+                                             .objectType = object.ObjectType.Paddle,
+                                            };
         const paddle2: object.GameObject = .{.state = state.State{.x = windowWidth - 50, 
                                                                   .y = 50, 
                                                                   .dx = 0, 
@@ -36,9 +38,11 @@ pub const World = struct {
                                              .doHandleInput = input.demoController,
                                              .doUpdateState = state.updatePaddleState,
                                              .doRender      = _render_.renderPaddle,
+                                             .doResolveCollision = state.resolvePaddleCollision,
                                              .score = 0,
-                                             .name = "paddle2",
-                                         };
+                                             .name = "Player 2",
+                                             .objectType = object.ObjectType.Paddle,
+                                            };
         var gameObjects = std.ArrayList(object.GameObject).init(allocator);
         try gameObjects.append(paddle1);
         try gameObjects.append(paddle2);
@@ -59,6 +63,19 @@ pub const World = struct {
         // This cannot be asynchronous if the game is to be deterministic.
         for (self.gameObjects.items[0..self.gameObjects.items.len]) |*gameObject| {
             gameObject.updateState(dt);
+        }
+    }
+
+    pub fn resolveCollision(self: *World) void {
+        // This cannot be asynchronous if the game is to be deterministic.
+        const num_objects: usize = self.gameObjects.items.len;
+        if (num_objects == 0) return;
+        const num: usize = num_objects - 1;
+        for (self.gameObjects.items[0..num], 0..num) |*gameObject1, i| {
+            for (self.gameObjects.items[i+1..num+1]) |*gameObject2| {
+                gameObject1.resolveCollision(gameObject2);
+                gameObject2.resolveCollision(gameObject1);
+            }
         }
     }
 
